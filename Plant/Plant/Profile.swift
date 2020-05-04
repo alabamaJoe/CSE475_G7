@@ -13,7 +13,7 @@ struct Profile {
     var prefersNotifications: Bool
     var plantname: String
     
-    static let `default` = Self(username: "planter", prefersNotifications: true, plantname: "greenboi")
+    static let `default` = Self(username: "Planter", prefersNotifications: true, plantname: "Greenboi")
     
     init(username: String, prefersNotifications: Bool = true, plantname: String) {
         self.username = username

@@ -21,6 +21,7 @@ struct PlantData: View {
                 .shadow(radius: 10)
             Text(profile.plantname)
                 .font(.title)
+            
         }
         
     }
@@ -31,3 +32,4 @@ struct PlantData_Previews: PreviewProvider {
         PlantData(image: Image("basil"), profile: (.default))
     }
 }
+
