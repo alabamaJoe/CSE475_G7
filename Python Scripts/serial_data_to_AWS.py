@@ -9,8 +9,8 @@ ser = serial.Serial("/dev/ttyAMA0")
 ser.baudrate = 9600
 
 # AWS Bucket Information
-ACCESS_KEY_ID = 'AKIA4ZKRBRTAE7TOFYTR'
-ACCESS_SECRET_KEY = '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'
+ACCESS_KEY_ID = ''
+ACCESS_SECRET_KEY = ''
 BUCKET_NAME = 'plant-sensor-data-storage-plant.ai'
 
 # Specify file name based off the date
