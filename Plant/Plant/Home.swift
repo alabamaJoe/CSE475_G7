@@ -7,8 +7,17 @@
 //
 
 import SwiftUI
+import AWSS3
+import AWSCore
+import AWSCognito
 
 struct Home: View {
+    weak var label: UILabel!
+    weak var activityIndicator: UIActivityIndicatorView!
+    weak var imageView: UIImageView!
+    weak var progressBar: UIProgressView!
+    
+    weak var image: UIImageView!
     @State var openSettings = false
     @EnvironmentObject var userData: UserData
     
@@ -17,10 +26,11 @@ struct Home: View {
     @State var imagepicker = false
     @State var source: UIImagePickerController.SourceType = .photoLibrary
     
+    @ObservedObject var fetcher = MovieFetcher()
+    
     
     let gradientColors = Gradient(colors: [.green, .blue])
     
-
     init(){
 //        UINavigationBar.appearance().backgroundColor = UIColor(red: 0.401, green: 0.994, blue: 0.628, alpha: 1.0)
         UINavigationBar.appearance().backgroundColor = UIColor(red: 0.753, green: 0.753, blue: 0.753, alpha: 1.0)
@@ -34,8 +44,10 @@ struct Home: View {
                 .padding()
         }
     }
+    
         
     var body: some View {
+        
         NavigationView{
             ZStack {
                 NavigationLink(destination: ImagePicker(show: $imagepicker, image: $imageData, source: source), isActive: $imagepicker) {
@@ -46,10 +58,10 @@ struct Home: View {
                     Spacer()
                     if self.imageData.count != 0 {
                         PlantData(image: Image(uiImage:UIImage(data: self.imageData)!), profile: self.userData.profile)
-                            .offset(x: CGFloat(0), y: CGFloat(-140))
+                            .offset(x: CGFloat(0), y: CGFloat(-120))
                     } else {
                         PlantData(image: Image("basil"), profile: self.userData.profile)
-                            .offset(x: CGFloat(0), y: CGFloat(-140))
+                            .offset(x: CGFloat(0), y: CGFloat(-120))
                     }
                     
                     Spacer()
@@ -58,17 +70,23 @@ struct Home: View {
                     Button(action: { self.show.toggle() }) {
                         Image(systemName: "camera.circle")
                             .imageScale(.large)
-                            .position(x: 270, y: 190)
+                            .position(x: CGFloat(270), y: CGFloat(190))
                     }
                 }
                 
                 Text("Temp: 30° C")
                     .font(.title)
-                    .position(x: 190, y: 330)
-                
-                Text("Moisture Level: 42%")
-                    .font(.title)
-                    .position(x: 190, y: 450)
+                    .position(x: 200, y: 330)
+                if (fetcher.movies.count != 0) {
+                    Text("Moisture Level: " + fetcher.movies[0].name)
+                        .font(.title)
+                        .position(x: 200, y: 450)
+                } else {
+                    Text("Moisture Level: Unavailable")
+                        .font(.title)
+                        .position(x: 200, y: 450)
+            
+                }
                 
             }
 
@@ -98,7 +116,60 @@ struct Home: View {
         
     }
 }
+
+struct Response: Codable {
+    var results: [Result]
+}
+
+struct Result: Codable {
+    public var id: Int
+    public var name: String
+    public var released: String
+}
+
+struct Movie: Decodable, Identifiable {
+    public var id: Int
+    public var name: String
+    public var released: String
+    
+    enum CodingKeys: String, CodingKey {
+           case id = "id"
+           case name = "title"
+           case released = "year"
+        }
+}
+
+public class MovieFetcher: ObservableObject {
+    @Published var movies = [Movie]()
+    
+    init(){
+        load()
+    }
+    
+    func load() {
+        let url = URL(string: "https://json-data11954-xcode.s3-us-west-2.amazonaws.com/movies.json")!
+    
+        URLSession.shared.dataTask(with: url) {(data,response,error) in
+            do {
+                if let d = data {
+                    let decodedLists = try JSONDecoder().decode([Movie].self, from: d)
+                    DispatchQueue.main.async {
+                        self.movies = decodedLists
+                        print(decodedLists[0])
+                    }
+                }else {
+                    print("No Data")
+                }
+            } catch {
+                print ("Error")
+            }
+            
+        }.resume()
+         
+    }
+}
  
+
 
 struct Home_Previews: PreviewProvider {
     static var previews: some View {

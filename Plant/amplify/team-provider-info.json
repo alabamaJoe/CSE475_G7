@@ -1,0 +1,20 @@
+{
+    "xcode": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-plant-xcode-11954-authRole",
+            "UnauthRoleArn": "arn:aws:iam::450319116714:role/amplify-plant-xcode-11954-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::450319116714:role/amplify-plant-xcode-11954-authRole",
+            "Region": "us-west-2",
+            "DeploymentBucketName": "amplify-plant-xcode-11954-deployment",
+            "UnauthRoleName": "amplify-plant-xcode-11954-unauthRole",
+            "StackName": "amplify-plant-xcode-11954",
+            "StackId": "arn:aws:cloudformation:us-west-2:450319116714:stack/amplify-plant-xcode-11954/09ed2a70-8de0-11ea-9f7c-06b8fd1f0384",
+            "AmplifyAppId": "d3kgzybobnb6qd"
+        },
+        "categories": {
+            "auth": {
+                "plantAI": {}
+            }
+        }
+    }
+}

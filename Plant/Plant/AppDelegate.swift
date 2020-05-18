@@ -7,15 +7,26 @@
 //
 
 import UIKit
+import AWSCognito
+import AWSCore
+import AWSS3
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {        
-
+    var window: UIWindow?
+    let identityID = "us-west-2:1b040d1e-1467-4c13-9e3e-36ed39b53385"
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        //Setup credentials, see your awsconfiguration.json for the "YOUR-IDENTITY-POOL-ID"
+        let credentialProvider = AWSCognitoCredentialsProvider(regionType: .USWest2, identityPoolId: identityID)
+
+        //Setup the service configuration
+        let configuration = AWSServiceConfiguration(region: .USEast1, credentialsProvider: credentialProvider)
+        
+        AWSServiceManager.default().defaultServiceConfiguration = configuration
+        
         return true
     }
 
@@ -31,6 +42,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the user discards a scene session.
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+    }
+    
+    func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+        
+        AWSS3TransferUtility.interceptApplication(application, handleEventsForBackgroundURLSession: identifier, completionHandler: completionHandler)
     }
 
 

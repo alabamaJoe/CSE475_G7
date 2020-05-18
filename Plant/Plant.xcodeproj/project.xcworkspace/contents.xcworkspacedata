@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:Plant.xcodeproj">
+      location = "self:/Users/michaelpark97/Desktop/CSE475_G7/PlantAI/Plant.xcodeproj">
    </FileRef>
 </Workspace>
