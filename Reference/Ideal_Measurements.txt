@@ -1,0 +1,15 @@
+Basil:
+Moisture High: 70%
+Moisture Low: 50%
+Temperature Low: 60 F
+
+Jade:
+Moisture High: 25%
+Moisture Low: 5%
+Temperature Low: 40 F
+
+Cactus:
+Moisture High: 25%
+Moisture Low: 5%
+Temperature High: 90 F
+Temperature Low: 65 F
