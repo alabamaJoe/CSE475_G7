@@ -26,13 +26,12 @@ struct Home: View {
     @State var imagepicker = false
     @State var source: UIImagePickerController.SourceType = .photoLibrary
     
-    @ObservedObject var fetcher = MovieFetcher()
+    @ObservedObject var loader = DataLoader()
     
     
     let gradientColors = Gradient(colors: [.green, .blue])
     
     init(){
-//        UINavigationBar.appearance().backgroundColor = UIColor(red: 0.401, green: 0.994, blue: 0.628, alpha: 1.0)
         UINavigationBar.appearance().backgroundColor = UIColor(red: 0.753, green: 0.753, blue: 0.753, alpha: 1.0)
 
     }
@@ -73,19 +72,42 @@ struct Home: View {
                             .position(x: CGFloat(270), y: CGFloat(190))
                     }
                 }
-                
-                Text("Temp: 30° C")
-                    .font(.title)
-                    .position(x: 200, y: 330)
-                if (fetcher.movies.count != 0) {
-                    Text("Moisture Level: " + fetcher.movies[0].name)
-                        .font(.title)
-                        .position(x: 200, y: 450)
-                } else {
-                    Text("Moisture Level: Unavailable")
-                        .font(.title)
-                        .position(x: 200, y: 450)
-            
+                VStack {
+                    if (loader.data.count != 0) {
+                        Text("Temperature: " + String(format: "%.1f", self.loader.data[0].temperature) + " °C")
+                            .font(.title)
+                            .position(x: 200, y: 330)
+                    } else {
+                        Text("Temperature: Unavailable")
+                            .font(.title)
+                            .position(x: 200, y: 330)
+
+                    }
+                }
+                VStack {
+                    if (loader.data.count != 0) {
+                        Text("Moisture Level: " + String(format: "%.1f", self.loader.data[0].moisture) + "%")
+                            .font(.title)
+                            .position(x: 200, y: 390)
+                    } else {
+                        Text("Moisture Level: Unavailable")
+                            .font(.title)
+                            .position(x: 200, y: 390)
+
+                    }
+                }
+                VStack {
+                    if (loader.data.count != 0) {
+                      Text("Humidity: " + String(format: "%.1f", self.loader.data[0].humidity) + "%")
+                            .font(.title)
+                            .position(x: 200, y: 450)
+                    } else {
+                        Text("Humidity: Unavailable")
+                            .font(.title)
+                            .position(x: 200, y: 450)
+
+                    }
+  
                 }
                 
             }
@@ -116,45 +138,36 @@ struct Home: View {
         
     }
 }
-
-struct Response: Codable {
-    var results: [Result]
-}
-
-struct Result: Codable {
-    public var id: Int
-    public var name: String
-    public var released: String
-}
-
-struct Movie: Decodable, Identifiable {
-    public var id: Int
-    public var name: String
-    public var released: String
+struct SensorData: Codable {
+    public var temperature: Float
+    public var moisture: Float
+    public var humidity: Float
     
     enum CodingKeys: String, CodingKey {
-           case id = "id"
-           case name = "title"
-           case released = "year"
-        }
+        case temperature = "temperature"
+        case moisture = "moisture"
+        case humidity = "humidity"
+    }
 }
 
-public class MovieFetcher: ObservableObject {
-    @Published var movies = [Movie]()
+public class DataLoader: ObservableObject {
+    @Published var data = [SensorData]()
     
     init(){
         load()
     }
     
     func load() {
-        let url = URL(string: "https://json-data11954-xcode.s3-us-west-2.amazonaws.com/movies.json")!
-    
-        URLSession.shared.dataTask(with: url) {(data,response,error) in
+        
+        let url = URL(string: "https://s3-us-west-1.amazonaws.com/plant-sensor-data-storage-plant.ai/data_update.json")!
+        let configuration = URLSessionConfiguration.ephemeral
+        let session = URLSession(configuration: configuration)
+        session.dataTask(with: url) {(data,response,error) in
             do {
                 if let d = data {
-                    let decodedLists = try JSONDecoder().decode([Movie].self, from: d)
+                    let decodedLists = try JSONDecoder().decode([SensorData].self, from: d)
                     DispatchQueue.main.async {
-                        self.movies = decodedLists
+                        self.data = decodedLists
                         print(decodedLists[0])
                     }
                 }else {
@@ -166,6 +179,8 @@ public class MovieFetcher: ObservableObject {
             
         }.resume()
          
+        
+        
     }
 }
  
