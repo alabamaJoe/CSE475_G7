@@ -15,7 +15,7 @@ BUCKET_NAME = 'plant-sensor-data-storage-plant.ai'
 
 # Specify file name based off the date
 today = date.today()
-today_file = str(today) + '.txt'
+today_file = str(today) + '.json'
 
 # Reading current sensor values from Serial bus
 curr_moisture = ser.read(2)
@@ -26,7 +26,7 @@ ser.close()
 
 
 # Make JSON file with values
-values = {'current_state': {'moisture': curr_moisture, 'temperature': curr_temp, 'humidity': curr_humidity}}
+values = [{'moisture': curr_moisture, 'temperature': curr_temp, 'humidity': curr_humidity}]
 with open(today_file, 'w') as outfile:
     json.dump(values, outfile)
 
@@ -40,6 +40,6 @@ s3 = boto3.resource(
     aws_secret_access_key=ACCESS_SECRET_KEY,
     config=Config(signature_version='s3v4')
 )
-s3.Bucket(BUCKET_NAME).put_object(Key=today_file, Body=data)
+s3.Bucket(BUCKET_NAME).put_object(Key=today_file, Body=data, ACL='public-read', ContentType='text/plain')
 
 print ("Done")
