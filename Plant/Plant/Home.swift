@@ -12,6 +12,10 @@ import AWSCore
 import AWSCognito
 
 struct Home: View {
+
+    let timer = Timer.publish(every: 2, on: .current, in: .common).autoconnect()
+
+
     weak var label: UILabel!
     weak var activityIndicator: UIActivityIndicatorView!
     weak var imageView: UIImageView!
@@ -71,9 +75,15 @@ struct Home: View {
                             .imageScale(.large)
                             .position(x: CGFloat(270), y: CGFloat(190))
                     }
+                    Button(action: { self.loader.load() }) {
+                        Image(systemName: "camera.circle")
+                            .imageScale(.large)
+                            .position(x: CGFloat(270), y: CGFloat(190))
+                    }
                 }
                 VStack {
                     if (loader.data.count != 0) {
+                    
                         Text("Temperature: " + String(format: "%.1f", self.loader.data[0].temperature) + " °C")
                             .font(.title)
                             .position(x: 200, y: 330)
@@ -84,6 +94,7 @@ struct Home: View {
 
                     }
                 }
+             
                 VStack {
                     if (loader.data.count != 0) {
                         Text("Moisture Level: " + String(format: "%.1f", self.loader.data[0].moisture) + "%")
@@ -109,7 +120,7 @@ struct Home: View {
                     }
   
                 }
-                
+
             }
 
             .navigationBarTitle("Hello,  \(self.userData.profile.username)")
@@ -118,6 +129,11 @@ struct Home: View {
                 SettingsView()
                     .environmentObject(self.userData)
             }
+            .onReceive(timer) {time in
+                self.loader.load()
+                print("\(time)")
+            }
+                
             .actionSheet(isPresented: $show) {
                 ActionSheet(title: Text("Take photo or choose from library"), message: Text(""), buttons: [.default(Text("Photo Library "), action: {
                         self.source = .photoLibrary
@@ -138,6 +154,7 @@ struct Home: View {
         
     }
 }
+
 struct SensorData: Codable {
     public var temperature: Float
     public var moisture: Float
@@ -149,41 +166,6 @@ struct SensorData: Codable {
         case humidity = "humidity"
     }
 }
-
-public class DataLoader: ObservableObject {
-    @Published var data = [SensorData]()
-    
-    init(){
-        load()
-    }
-    
-    func load() {
-        
-        let url = URL(string: "https://s3-us-west-1.amazonaws.com/plant-sensor-data-storage-plant.ai/data_update.json")!
-        let configuration = URLSessionConfiguration.ephemeral
-        let session = URLSession(configuration: configuration)
-        session.dataTask(with: url) {(data,response,error) in
-            do {
-                if let d = data {
-                    let decodedLists = try JSONDecoder().decode([SensorData].self, from: d)
-                    DispatchQueue.main.async {
-                        self.data = decodedLists
-                        print(decodedLists[0])
-                    }
-                }else {
-                    print("No Data")
-                }
-            } catch {
-                print ("Error")
-            }
-            
-        }.resume()
-         
-        
-        
-    }
-}
- 
 
 
 struct Home_Previews: PreviewProvider {

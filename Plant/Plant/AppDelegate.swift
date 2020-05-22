@@ -12,21 +12,62 @@ import AWSCore
 import AWSS3
 import BackgroundTasks
 
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+
 
     var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        //Setup credentials, see your awsconfiguration.json for the "YOUR-IDENTITY-POOL-ID"
-  
         
+//        BGTaskScheduler.shared.register(
+//            forTaskWithIdentifier: "com.jsonData.refresh",
+//            using: DispatchQueue.global()
+//        ) { task in
+//            self.handleAppRefresh(task)
+//        }
         return true
     }
+    
+//    private func handleAppRefresh(_ task: BGTask) {
+//        let queue = OperationQueue()
+//
+//        queue.maxConcurrentOperationCount = 1
+////        let appRefreshOperation =  DataLoader.loadJSON()
+////        queue.addOperation(appRefreshOperation)
+//
+//        task.expirationHandler = {
+//            queue.cancelAllOperations()
+//        }
+//
+//        let lastOperation = queue.operations.last
+//        lastOperation?.completionBlock = {
+//            task.setTaskCompleted(success: !(lastOperation?.isCancelled ?? false))
+//        }
+//
+//        scheduleAppRefresh()
+//    }
+    
+//    func applicationDidEnterBackground(_ application: UIApplication) {
+//        scheduleAppRefresh()
+//    }
+//
+//    private func scheduleAppRefresh() {
+//        do {
+//            let request = BGAppRefreshTaskRequest(identifier: "com.jsonData.refresh")
+//            request.earliestBeginDate = Date(timeIntervalSinceNow: 60)
+//            try BGTaskScheduler.shared.submit(request)
+//        } catch {
+//            print(error)
+//        }
+//    }
+//
 
-    // MARK: UISceneSession Lifecycle
-
+    func applicationWillTerminate(_ application: UIApplication) {
+        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    }
+    
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         // Called when a new scene session is being created.
         // Use this method to select a configuration to create the new scene with.
