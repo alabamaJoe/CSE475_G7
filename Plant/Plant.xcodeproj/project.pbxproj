@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		BFAE283424DC59FB58C2797B /* Pods_Plant.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2965C8EFB733C7D07C118D18 /* Pods_Plant.framework */; };
 		C60243C1CD948CAA039E7822 /* Pods_PlantTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E062827254EF585365A1DAA7 /* Pods_PlantTests.framework */; };
+		F011D9FB2478CA8A00DB7B6D /* IdealPlant.swift in Sources */ = {isa = PBXBuildFile; fileRef = F011D9FA2478CA8A00DB7B6D /* IdealPlant.swift */; };
+		F011D9FD2479160A00DB7B6D /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F011D9FC2479160A00DB7B6D /* ImageLoader.swift */; };
+		F011D9FF2479B36A00DB7B6D /* TypeLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F011D9FE2479B36A00DB7B6D /* TypeLoader.swift */; };
 		F0273A7F245126630000419A /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0273A7E245126620000419A /* Home.swift */; };
 		F0273A83245142C90000419A /* PlantData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0273A82245142C90000419A /* PlantData.swift */; };
 		F0511ECB2457564200FEC540 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0511ECA2457564200FEC540 /* SettingsView.swift */; };
@@ -43,6 +46,9 @@
 		D22E98504AC3316264668D4D /* Pods-Plant.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Plant.debug.xcconfig"; path = "Target Support Files/Pods-Plant/Pods-Plant.debug.xcconfig"; sourceTree = "<group>"; };
 		DFA12628BF1FF4503E69D799 /* Pods-Plant.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Plant.release.xcconfig"; path = "Target Support Files/Pods-Plant/Pods-Plant.release.xcconfig"; sourceTree = "<group>"; };
 		E062827254EF585365A1DAA7 /* Pods_PlantTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PlantTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F011D9FA2478CA8A00DB7B6D /* IdealPlant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdealPlant.swift; sourceTree = "<group>"; };
+		F011D9FC2479160A00DB7B6D /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		F011D9FE2479B36A00DB7B6D /* TypeLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeLoader.swift; sourceTree = "<group>"; };
 		F0273A7E245126620000419A /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		F0273A82245142C90000419A /* PlantData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantData.swift; sourceTree = "<group>"; };
 		F0511ECA2457564200FEC540 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -130,7 +136,9 @@
 				F0ED27D424600AE3001080E6 /* awsconfiguration.json */,
 				F0511ECC2457564F00FEC540 /* Profile.swift */,
 				F0CFC0B42477B7FB00B74892 /* DataLoader.swift */,
+				F011D9FC2479160A00DB7B6D /* ImageLoader.swift */,
 				F0511ECA2457564200FEC540 /* SettingsView.swift */,
+				F011D9FE2479B36A00DB7B6D /* TypeLoader.swift */,
 				F0511ECE2457578900FEC540 /* UserData.swift */,
 				F0273A82245142C90000419A /* PlantData.swift */,
 				F0273A7E245126620000419A /* Home.swift */,
@@ -138,6 +146,7 @@
 				F0FB74952450305100801938 /* SceneDelegate.swift */,
 				F0FB74972450305100801938 /* ContentView.swift */,
 				F0CFC0B82477D52100B74892 /* Notification.swift */,
+				F011D9FA2478CA8A00DB7B6D /* IdealPlant.swift */,
 				F0FB74992450305400801938 /* Assets.xcassets */,
 				F0FB749E2450305400801938 /* LaunchScreen.storyboard */,
 				F0FB74A12450305400801938 /* Info.plist */,
@@ -334,12 +343,15 @@
 			files = (
 				F0511ECD2457565000FEC540 /* Profile.swift in Sources */,
 				F0273A83245142C90000419A /* PlantData.swift in Sources */,
+				F011D9FD2479160A00DB7B6D /* ImageLoader.swift in Sources */,
 				F0511ECF2457578900FEC540 /* UserData.swift in Sources */,
 				F0FB74942450305100801938 /* AppDelegate.swift in Sources */,
 				F0FB74962450305100801938 /* SceneDelegate.swift in Sources */,
+				F011D9FF2479B36A00DB7B6D /* TypeLoader.swift in Sources */,
 				F0511ECB2457564200FEC540 /* SettingsView.swift in Sources */,
 				F0CFC0B92477D52100B74892 /* Notification.swift in Sources */,
 				F0273A7F245126630000419A /* Home.swift in Sources */,
+				F011D9FB2478CA8A00DB7B6D /* IdealPlant.swift in Sources */,
 				F0FB74982450305100801938 /* ContentView.swift in Sources */,
 				F0CFC0B52477B7FB00B74892 /* DataLoader.swift in Sources */,
 			);

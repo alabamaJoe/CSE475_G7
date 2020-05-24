@@ -10,16 +10,16 @@ import SwiftUI
 
 struct PlantData: View {
     var image: Image
-    var profile: Profile
+    var plantName: String
     var body: some View {
         VStack{
             image
                 .resizable()
-                .frame(width: 150.0, height: 150.0)
+                .frame(width: 200.0, height: 200.0)
                 .clipShape(Circle())
                 .overlay(Circle().stroke(Color.white, lineWidth: 4))
                 .shadow(radius: 10)
-            Text(profile.plantname)
+            Text(plantName)
                 .font(.title)
             
         }
@@ -29,7 +29,7 @@ struct PlantData: View {
 
 struct PlantData_Previews: PreviewProvider {
     static var previews: some View {
-        PlantData(image: Image("basil"), profile: (.default))
+        PlantData(image: Image("basil"), plantName: ("Green"))
     }
 }
 
