@@ -11,6 +11,7 @@ import AWSCognito
 import AWSCore
 import AWSS3
 import BackgroundTasks
+import UserNotifications
 
 
 @UIApplicationMain
@@ -21,12 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-//        BGTaskScheduler.shared.register(
-//            forTaskWithIdentifier: "com.jsonData.refresh",
-//            using: DispatchQueue.global()
-//        ) { task in
-//            self.handleAppRefresh(task)
-//        }
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {(granted, error) in
+           // Use granted to check if permission is granted
+        }
         return true
     }
     
@@ -63,6 +61,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        }
 //    }
 //
+    
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
