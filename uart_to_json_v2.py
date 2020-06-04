@@ -10,8 +10,8 @@ ser = serial.Serial ("/dev/ttyS0") #Open named port
 ser.baudrate = 115200
 
 # AWS bucket info
-ACCESS_KEY_ID = 'AKIA4ZKRBRTAJGLQTCIT'
-ACCESS_SECRET_KEY = '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'
+ACCESS_KEY_ID = ''
+ACCESS_SECRET_KEY = ''
 BUCKET_NAME = 'plant-sensor-data-storage-plant.ai'
 
 data_file = 'data_plant.json'
