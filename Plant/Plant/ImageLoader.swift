@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+// Grabs plant image URL and downloads the JSON file that is stored. Then parses the file to store the data into a dictionary
 public class ImageLoader: ObservableObject {
     @Published var image = UIImage(imageLiteralResourceName: "basil")
     init(){

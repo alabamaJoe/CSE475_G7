@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+// Struct for storing the respective ideal values for a plant type
 struct IdealPlant {
     var moisture: Float
     var temperature: Float

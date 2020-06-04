@@ -7,9 +7,6 @@
 //
 
 import SwiftUI
-import AWSS3
-import AWSCore
-import AWSCognito
 import UserNotifications
 
 struct Home: View {
@@ -66,9 +63,6 @@ struct Home: View {
         
         NavigationView{
             ZStack {
-                NavigationLink(destination: ImagePicker(show: $imagepicker, image: $imageData, source: source), isActive: $imagepicker) {
-                    Text("")
-                }
                 RadialGradient(gradient: gradientColors, center: .center, startRadius: 2, endRadius: 650)
                 HStack(alignment: .center){     // Displays Plant Type (ML Output)
                     if (loaderType.data.count != 0) {
@@ -208,7 +202,8 @@ struct Home: View {
         }
     }
     
-    func notifyWater() {        // Designs notification message for low moisture
+    // Designs notification message for low moisture
+    func notifyWater() {
         let content = UNMutableNotificationContent()
         content.title = "Please Water Your Plant"
         content.body = "Your Plant's Moisture is Below its Ideal Condition."
@@ -219,7 +214,8 @@ struct Home: View {
         UNUserNotificationCenter.current().add(req, withCompletionHandler: nil)
     }
     
-    func notifyTemperature() {      // Designs notification message for low temperature
+    // Designs notification message for low temperature
+    func notifyTemperature() {
         let content = UNMutableNotificationContent()
         content.title = "Please Move Your Plant to a Warmer Location"
         content.body = "Your Plant's Temperature is Below its Ideal Condition."
@@ -231,7 +227,8 @@ struct Home: View {
     }
 }
 
-struct SensorData: Codable {    // Struct for holoding sensor data
+// Struct for holoding sensor data
+struct SensorData: Codable {
     public var temperature: Float
     public var moisture: Float
     public var humidity: Float
@@ -243,7 +240,8 @@ struct SensorData: Codable {    // Struct for holoding sensor data
     }
 }
 
-struct TypeData: Codable {      // Struct for holding plant type data
+// Struct for holding plant type data
+struct TypeData: Codable {
     public var plantType: String
     
     enum CodingKeys: String, CodingKey {
@@ -256,42 +254,4 @@ struct Home_Previews: PreviewProvider {
     static var previews: some View {
         Home().environmentObject(UserData())
     }
-}
-
-struct ImagePicker : UIViewControllerRepresentable {
-    @Binding var show : Bool
-    @Binding var image : Data
-    var source : UIImagePickerController.SourceType
-    
-    func makeCoordinator() -> ImagePicker.Coordinator {
-        return ImagePicker.Coordinator(parent1: self)
-    }
-    
-    func makeUIViewController(context: UIViewControllerRepresentableContext<ImagePicker>) -> UIImagePickerController {
-        let controller = UIImagePickerController()
-        controller.sourceType = source
-        controller.delegate = context.coordinator
-        return controller
-    }
-    
-    func updateUIViewController(_ uiViewController: UIImagePickerController, context: UIViewControllerRepresentableContext<ImagePicker>) {
-    }
-    
-    class Coordinator : NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
-        var parent : ImagePicker
-        init(parent1 : ImagePicker) {
-            parent = parent1
-        }
-        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            self.parent.show.toggle()
-        }
-        
-        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            let image = info[.originalImage] as! UIImage
-            let data = image.pngData()
-            self.parent.image = data!
-            self.parent.show.toggle()
-        }
-    }
-    
 }

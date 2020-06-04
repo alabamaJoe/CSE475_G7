@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+// Grabs plant type URL and downloads the JSON file that is stored. Then parses the file to store the data into a dictionary
 public class TypeLoader: ObservableObject {
     @Published var data = [TypeData]()
     init(){

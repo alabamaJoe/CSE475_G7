@@ -8,6 +8,7 @@
 
 import Foundation
 
+// Holds user data info
 struct Profile {
     var username: String
     var prefersNotifications: Bool

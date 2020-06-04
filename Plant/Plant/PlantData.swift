@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+// View that takes in a plant image and type to output a formatted view of the image
 struct PlantData: View {
     var image: Image
     var plantName: String
@@ -21,9 +22,7 @@ struct PlantData: View {
                 .shadow(radius: 10)
             Text(plantName)
                 .font(.title)
-            
         }
-        
     }
 }
 

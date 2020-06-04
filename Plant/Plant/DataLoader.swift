@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+// Grabs plant data URL and downloads the JSON file that is stored. Then parses the file to store the data into a dictionary
 public class DataLoader: ObservableObject {
     @Published var data = [SensorData]()
     init(){
@@ -36,5 +37,11 @@ public class DataLoader: ObservableObject {
             
         }.resume()
          
+    }
+}
+
+struct DataLoader_Previews: PreviewProvider {
+    static var previews: some View {
+        /*@START_MENU_TOKEN@*/Text("Hello, World!")/*@END_MENU_TOKEN@*/
     }
 }
