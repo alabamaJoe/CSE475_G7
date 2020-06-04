@@ -12,7 +12,7 @@
         <div id="chart"></div>
         <script>
             // initial dummy value to initialize the plot
-            var initial = [{"temperature": 22.5, "moisture": 42.9, "humidity": 42.1}];
+            var initial = [{"temperature": 19.9, "moisture": 93.2, "humidity": 43.2}];
 
             // function to grab plant name and set the layout parameters for the plot
             $.getJSON('https://s3-us-west-1.amazonaws.com/plant-sensor-data-storage-plant.ai/id_plant.json', ( function (data, status) {
@@ -38,7 +38,7 @@
                 },
                 yaxis: {
                   title: {
-                    text: 'Temperature',
+                    text: 'Sensor Value',
                     font: {
                       family: 'Courier New, monospace',
                       size: 18,
