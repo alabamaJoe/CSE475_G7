@@ -11,7 +11,7 @@ import UserNotifications
 
 struct Home: View {
 
-    let timer = Timer.publish(every: 1, on: .current, in: .common).autoconnect()    // Start timer
+    let timer = Timer.publish(every: 1, on: .current, in: .common).autoconnect()    // Start timer for periodic actions
 
     weak var label: UILabel!
     weak var activityIndicator: UIActivityIndicatorView!
@@ -22,21 +22,15 @@ struct Home: View {
     @State var openSettings = false
 //    @EnvironmentObject var userData: UserData
     
-    @State var imageData : Data = .init(capacity: 0)
-    @State var show = false
-    @State var imagepicker = false
-    @State var source: UIImagePickerController.SourceType = .photoLibrary
-    
     @ObservedObject var loader = DataLoader()       // Fetch sensor data
     @ObservedObject var loaderImage = ImageLoader()     // Fetch image data
     @ObservedObject var loaderType = TypeLoader()       // Fetch Plant type (ML output)
     
     @State var plantImage:UIImage?
     
-    @State var count = 0
-    @State var plantName = "Unavailable"
-    @State var waterToken = false
-    @State var heatToken = false
+    @State var count = 0    // Timer count
+    @State var waterToken = false   // Used for detecting if watering notification needs to be sent
+    @State var heatToken = false    // Used for detecting if temperature notifications needs to be sent
     let defaultHealth = "Your Plant's Conditions are Ideal"
     
     // Initialize ideal plant types
@@ -48,6 +42,7 @@ struct Home: View {
     
     var idealBank = [String:IdealPlant]()
     
+    // Set color pattern for background
     let gradientColors = Gradient(colors: [.green, .blue])
     
     init(){
@@ -60,11 +55,10 @@ struct Home: View {
     }
         
     var body: some View {
-        
         NavigationView{
             ZStack {
                 RadialGradient(gradient: gradientColors, center: .center, startRadius: 2, endRadius: 650)
-                HStack(alignment: .center){     // Displays Plant Type (ML Output)
+                HStack(alignment: .center){     // Accesses plant type and image loaders to display Plant image and Plant Type (ML Output)
                     if (loaderType.data.count != 0) {
                         PlantData(image: Image(uiImage: loaderImage.image), plantName: self.loaderType.data[0].plantType)
                             .offset(x: CGFloat(0), y: CGFloat(-120))
@@ -73,7 +67,7 @@ struct Home: View {
                             .offset(x: CGFloat(0), y: CGFloat(-120))
                     }
                 }
-                HStack(alignment: .center) {    // Displays Ideal Values of the Plant Type
+                HStack(alignment: .center) {    // Displays Ideal Values of the Plant Type from the ideal values dictionary
                     if (loaderType.data.count != 0) {
                         Text("Ideal Values [Temperature, Moisture]: [" + String(format: "%.1f", self.idealBank[self.loaderType.data[0].plantType]!.temperature) + " °C, " + String(format: "%.1f", self.idealBank[self.loaderType.data[0].plantType]!.moisture) + "%]")
                             .font(.caption)
@@ -84,9 +78,9 @@ struct Home: View {
                             .offset(x: CGFloat(0), y: CGFloat(10))
                     }
                 }
-                VStack {    // Displays message box (Informs if plant is healthy or needs attention
+                VStack {    // Displays message box (Informs if plant is healthy or needs attention)
                     if (self.waterToken == true && self.heatToken == true) {
-                        Text("Water Your Plants and Move to a Warmer Location") // If plant is too cold and needs water
+                        Text("Water Your Plants and Move to a Warmer Location") // If plant is too cold and needs water message
                             .fontWeight(.bold)
                         .padding()
                             .background(Color.white)
@@ -98,7 +92,7 @@ struct Home: View {
                         )
                         .position(x: 190, y: 340)
                     } else if (self.waterToken == true) {
-                        Text("Please Water Your Plants")    // If plant needs water
+                        Text("Please Water Your Plants")    // If plant needs water message
                             .fontWeight(.bold)
                         .padding()
                             .background(Color.white)
@@ -110,7 +104,7 @@ struct Home: View {
                         )
                         .position(x: 190, y: 340)
                     } else if (self.heatToken == true) {
-                        Text("Please Move Your Plants to a Warmer Location")    // If plant is too cold
+                        Text("Please Move Your Plants to a Warmer Location")    // If plant is too cold message
                             .fontWeight(.bold)
                         .padding()
                             .background(Color.white)
@@ -122,9 +116,8 @@ struct Home: View {
                         )
                         .position(x: 190, y: 340)
                     } else{
-                        Text(defaultHealth)     // Default, plant is healthy
+                        Text(defaultHealth)     // Default, plant is healthy message
                             .fontWeight(.bold)
-                            
                         .padding()
                             .background(Color.white)
                             .foregroundColor(.green)
@@ -134,10 +127,9 @@ struct Home: View {
                                 .stroke(Color.green, lineWidth: 10)
                         )
                         .position(x: 190, y: 340)
-
                     }
                 }
-                VStack {    // Displays current temperature sensor values
+                VStack {    // Displays current temperature sensor values from loader instance
                     if (loader.data.count != 0) {
                         Text("Temperature: " + String(format: "%.1f", self.loader.data[0].temperature) + " °C")
                             .font(.title)
@@ -148,8 +140,7 @@ struct Home: View {
                             .position(x: 200, y: 400)
                     }
                 }
-             
-                VStack {    // Displays current moisture sensor values
+                VStack {    // Displays current moisture sensor values from loader instance
                     if (loader.data.count != 0) {
                         Text("Moisture Level: " + String(format: "%.1f", self.loader.data[0].moisture) + "%")
                             .font(.title)
@@ -160,7 +151,7 @@ struct Home: View {
                             .position(x: 200, y: 450)
                     }
                 }
-                VStack {    // Displays current humidity values
+                VStack {    // Displays current humidity values from loader instance
                     if (loader.data.count != 0) {
                       Text("Humidity: " + String(format: "%.1f", self.loader.data[0].humidity) + "%")
                             .font(.title)
@@ -179,20 +170,21 @@ struct Home: View {
                 }
             })
             .onReceive(timer) {time in  // When timer triggers (1 s), refresh sensor values, plant pic, plant id, and parse to launch notifications if necessary
-                self.loader.load()
-                self.loaderImage.load()
-                self.loaderType.load()
+                // * Modified from https://www.youtube.com/watch?v=sBJ7rv4nhuk&list=LLhT0_L_-lW6_aQgQDUMNloQ&index=2&t=0s
+                self.loader.load()  // Reload sensor data
+                self.loaderImage.load() // Reload image data
+                self.loaderType.load()  // Reload plant type data
                 print("\(time)")
                 self.count += 1
-                if (self.loaderType.data.count != 0) {
+                if (self.loaderType.data.count != 0) {  // Logic for determining if notifications should be launched or not
                     if (self.loader.data[0].moisture < self.idealBank[self.loaderType.data[0].plantType]!.moisture) {   // Notification check for moisture levels
-                        self.notifyWater()
+                        self.notifyWater()  // Launches watering notifications if moisture levels are too low
                         self.waterToken = true
                     } else {
                         self.waterToken = false
                     }
                     if (self.loader.data[0].temperature < self.idealBank[self.loaderType.data[0].plantType]!.temperature) { // Notification check for temperature values
-                        self.notifyTemperature()
+                        self.notifyTemperature()    // Launches temperature notifications if temperature is too low
                         self.heatToken = true
                     } else {
                         self.heatToken = false
@@ -203,6 +195,7 @@ struct Home: View {
     }
     
     // Designs notification message for low moisture
+    // * Modified from https://www.youtube.com/watch?v=sBJ7rv4nhuk&list=LLhT0_L_-lW6_aQgQDUMNloQ&index=2&t=0s
     func notifyWater() {
         let content = UNMutableNotificationContent()
         content.title = "Please Water Your Plant"
@@ -215,6 +208,7 @@ struct Home: View {
     }
     
     // Designs notification message for low temperature
+    // * Modified from https://www.youtube.com/watch?v=sBJ7rv4nhuk&list=LLhT0_L_-lW6_aQgQDUMNloQ&index=2&t=0s
     func notifyTemperature() {
         let content = UNMutableNotificationContent()
         content.title = "Please Move Your Plant to a Warmer Location"
@@ -227,7 +221,8 @@ struct Home: View {
     }
 }
 
-// Struct for holoding sensor data
+// Struct for holding sensor data
+// * Modified from Medium tutorial https://medium.com/@rbreve/displaying-a-list-with-swiftui-from-a-remote-json-file-6b4e4280a076
 struct SensorData: Codable {
     public var temperature: Float
     public var moisture: Float
@@ -241,6 +236,7 @@ struct SensorData: Codable {
 }
 
 // Struct for holding plant type data
+// * Modified from Medium tutorial https://medium.com/@rbreve/displaying-a-list-with-swiftui-from-a-remote-json-file-6b4e4280a076
 struct TypeData: Codable {
     public var plantType: String
     
@@ -249,7 +245,7 @@ struct TypeData: Codable {
         }
 }
 
-
+// Generates preview for debugging purposes
 struct Home_Previews: PreviewProvider {
     static var previews: some View {
         Home().environmentObject(UserData())

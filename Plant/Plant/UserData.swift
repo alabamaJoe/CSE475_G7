@@ -9,7 +9,7 @@
 import SwiftUI
 import Combine
 
-// Tells xcode that UserData (holds profile) can change at any time
+// Tells xcode that UserData (holds profile) can change at any time (Needed for debugging)
 final class UserData: ObservableObject {
     @Published var profile = Profile.default
 }

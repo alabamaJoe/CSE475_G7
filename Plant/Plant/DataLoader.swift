@@ -9,6 +9,7 @@
 import SwiftUI
 
 // Grabs plant data URL and downloads the JSON file that is stored. Then parses the file to store the data into a dictionary
+// * Modified from Medium tutorial https://medium.com/@rbreve/displaying-a-list-with-swiftui-from-a-remote-json-file-6b4e4280a076
 public class DataLoader: ObservableObject {
     @Published var data = [SensorData]()
     init(){
