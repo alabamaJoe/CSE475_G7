@@ -245,7 +245,7 @@ float ave_calc(float new_data, float data_array[], int size) {
 	return ave;
 }
 
-//********************************* smooth function ************************************//
+//********************************* smooth function ***********************************//
 //float smooth(float ave, float old_data) {
 //	float output = 0;
 ////	if (old_data == 0) {
