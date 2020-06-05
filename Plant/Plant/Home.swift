@@ -33,7 +33,7 @@ struct Home: View {
     @State var heatToken = false    // Used for detecting if temperature notifications needs to be sent
     let defaultHealth = "Your Plant's Conditions are Ideal"
     
-    // Initialize ideal plant types
+    // Initialize ideal plant types for Basil, Jade, and Cactus
     let idealBasil = IdealPlant(moisture: 50.0, temperature: 15.56, humidity: 50.0)
     
     let idealJade = IdealPlant(moisture: 5.0, temperature: 4.44, humidity: 50.0)
