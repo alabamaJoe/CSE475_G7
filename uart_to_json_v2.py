@@ -20,11 +20,13 @@ data_file = 'data_plant.json'
 num = [6.9, 6.9, 6.9]
 i = 0
 
+# Reads measurement datas from serial port
 while i < 3:
 #     if i != 3:
     data_line = ser.readline()
     data_str = data_line.decode("utf-8")
     if len(data_str) > 1:
+        # collect formatted number part in each line 
         num[i] = float(data_str[15:20])
     i += 1
 
